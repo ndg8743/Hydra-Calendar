@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    volumes:
+      - .:/var/www/html
+      - ./storage:/var/www/html/storage
+    environment:
+      - APP_ENV=production
+      - APP_DEBUG=false
+      - APP_KEY=base64:${APP_KEY}
+      - DB_CONNECTION=mysql
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_DATABASE=hydra_calendar
+      - DB_USERNAME=hydra_user
+      - DB_PASSWORD=hydra_password
+    depends_on:
+      - db
+    networks:
+      - hydra-network
+
+  db:
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: hydra_calendar
+      MYSQL_USER: hydra_user
+      MYSQL_PASSWORD: hydra_password
+      MYSQL_ROOT_PASSWORD: root_password
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - hydra-network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: db
+      PMA_USER: hydra_user
+      PMA_PASSWORD: hydra_password
+    depends_on:
+      - db
+    networks:
+      - hydra-network
+
+volumes:
+  mysql_data:
+
+networks:
+  hydra-network:
+    driver: bridge

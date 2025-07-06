@@ -133,7 +133,7 @@ CREATE TABLE events (
 
 ## Deployment
 
-* Hosted at `hydra.newpaltz.edu/calendar`
+* Hosted at `hydra.newpaltz.edu/calendar` in a Docker container
 * Ensure secure connections via HTTPS.
 * Integrate seamlessly with existing campus SSO infrastructure.
 
