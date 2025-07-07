@@ -45,9 +45,10 @@ Start-Sleep -Seconds 10
 
 # Run Laravel setup commands
 Write-Host "Running Laravel setup..." -ForegroundColor Yellow
-docker-compose exec app composer install --optimize-autoloader
+docker-compose exec app composer install --optimize-autoloader --no-dev
 docker-compose exec app php artisan key:generate --force
 docker-compose exec app php artisan migrate --force
+docker-compose exec app php artisan db:seed --force
 docker-compose exec app php artisan config:cache
 docker-compose exec app php artisan route:cache
 docker-compose exec app php artisan view:cache
